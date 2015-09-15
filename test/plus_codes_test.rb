@@ -64,6 +64,16 @@ class PlusCodesTest < Test::Unit::TestCase
     end
   end
 
+  def test_exceptions
+    assert_raise ArgumentError do
+      @olc.encode(20, 30, 1)
+    end
+    assert_raise ArgumentError do
+      @olc.recover_nearest('9C3W9QCJ-2VX', 51.3708675, -1.217765625)
+    end
+    @olc.recover_nearest('9C3W9QCJ+2VX', 51.3708675, -1.217765625)
+  end
+
   def read_csv_lines(csv_file)
     f = File.open(File.join(@test_data_folder_path, csv_file), 'r')
     f.each_line.lazy.select { |line| line !~ /^\s*#/ }.map { |line| line.chop }
