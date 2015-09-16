@@ -75,7 +75,7 @@ class PlusCodesTest < Test::Unit::TestCase
   end
 
   def test_valid?_with_speacial_case
-    assert_false(@olc.valid?('3W00CJjj+'))
+    assert_false(@olc.valid?('3W00CJJJ+'))
   end
 
   def read_csv_lines(csv_file)
