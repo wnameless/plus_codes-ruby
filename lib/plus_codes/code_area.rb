@@ -12,7 +12,7 @@ module PlusCodes
   #   latitude_center: The latitude of the center in degrees.
   #   longitude_center: The longitude of the center in degrees.
   #   code_length: The number of significant characters that were in the code.
-  #   
+  #
   # @author We-Ming Wu
   class CodeArea
     attr_accessor :latitude_lo, :longitude_lo, :latitude_hi, :longitude_hi,
@@ -35,7 +35,7 @@ module PlusCodes
       @latitude_center = [@latitude_lo + (@latitude_hi - @latitude_lo) / 2, LATITUDE_MAX].min
       @longitude_center = [@longitude_lo + (@longitude_hi - @longitude_lo) / 2, LONGITUDE_MAX].min
     end
-
+    
     def to_s
       "lat_lo: #{@latitude_lo} long_lo: #{@longitude_lo} lat_hi: #{@latitude_hi} long_hi: #{@longitude_hi} code_len: #{@code_length}"
     end
