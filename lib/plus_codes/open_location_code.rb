@@ -25,16 +25,13 @@ module PlusCodes
       # We can have an even number of padding characters before the separator,
       # but then it must be the final character.
       if code.include?(PADDING)
-        # Not allowed to start with them!
         return false if code.start_with?(PADDING)
-
-        # There can only be one group and it must have even length.
-        pad_match = /(#{PADDING}+)/.match(code).to_a
-        return false if pad_match.length != 2
-        match = pad_match[1]
-        return false if match.length.odd? || match.length > SEPARATOR_POSITION - 2
-
-        # If the code is long enough to end with a separator, make sure it does.
+        pad_match = code.scan(/#{PADDING}+/)
+        return false unless pad_match.one?
+        padding = pad_match[0]
+        return false if padding.length.odd?
+        return false if padding.length > SEPARATOR_POSITION - 2
+        return false if code[-2] != PADDING
         return false if code[-1] != SEPARATOR
       end
 
@@ -312,7 +309,7 @@ module PlusCodes
       lng_place_value = GRID_SIZE_DEGREES
       (0...code.length).each do |i|
         code_index = DECODE[code[i].ord]
-        row = (code_index / GRID_COLUMNS).floor()
+        row = (code_index / GRID_COLUMNS).floor
         col = code_index % GRID_COLUMNS
 
         lat_place_value /= GRID_ROWS

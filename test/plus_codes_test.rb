@@ -18,7 +18,7 @@ class PlusCodesTest < Test::Unit::TestCase
       is_valid_olc = @olc.valid?(code)
       is_short_olc = @olc.short?(code)
       is_full_olc = @olc.full?(code)
-      result = is_full == is_full_olc && is_short_olc == is_short && is_valid_olc == is_valid
+      result = is_valid_olc == is_valid && is_short_olc == is_short && is_full_olc == is_full
       assert_true(result)
     end
   end
@@ -72,6 +72,10 @@ class PlusCodesTest < Test::Unit::TestCase
       @olc.recover_nearest('9C3W9QCJ-2VX', 51.3708675, -1.217765625)
     end
     @olc.recover_nearest('9C3W9QCJ+2VX', 51.3708675, -1.217765625)
+  end
+
+  def test_valid?_with_speacial_case
+    assert_false(@olc.valid?('3W00CJjj+'))
   end
 
   def read_csv_lines(csv_file)
