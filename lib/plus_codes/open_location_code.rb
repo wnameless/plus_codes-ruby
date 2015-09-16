@@ -4,7 +4,7 @@ require 'plus_codes/code_area'
 module PlusCodes
 
   # [OpenLocationCode] implements the Google Open Location Code(Plus+Codes) algorithm.
-  # 
+  #
   # @author We-Ming Wu
   class OpenLocationCode
 
@@ -35,7 +35,7 @@ module PlusCodes
         return false if match.length.odd? || match.length > SEPARATOR_POSITION - 2
 
         # If the code is long enough to end with a separator, make sure it does.
-        return false if code[code.length - 1] != SEPARATOR
+        return false if code[-1] != SEPARATOR
       end
 
       # If there are characters after the separator, make sure there isn't just
@@ -44,7 +44,7 @@ module PlusCodes
 
       # Check code contains only valid characters.
       code.chars.each do |ch|
-        return false if ch.ord > DECODE.length || DECODE[ch.ord] < -1
+        return false if ch.ord >= DECODE.length || DECODE[ch.ord] < -1
       end
       true
     end
