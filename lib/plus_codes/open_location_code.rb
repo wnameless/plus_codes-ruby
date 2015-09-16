@@ -4,6 +4,7 @@ require 'plus_codes/code_area'
 module PlusCodes
 
   # [OpenLocationCode] implements the Google Open Location Code(Plus+Codes) algorithm.
+  # 
   # @author We-Ming Wu
   class OpenLocationCode
 
