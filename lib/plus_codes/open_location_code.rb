@@ -19,19 +19,19 @@ module PlusCodes
       return false if separator_index.nil? ||
         separator_index != code.rindex(SEPARATOR) ||
         separator_index > SEPARATOR_POSITION ||
-        separator_index % 2 == 1
+        separator_index.odd?
 
       # We can have an even number of padding characters before the separator,
       # but then it must be the final character.
       if code.include?(PADDING)
         # Not allowed to start with them!
-        return false if code.index(PADDING) == 0
+        return false if code.start_with?(PADDING)
 
         # There can only be one group and it must have even length.
         pad_match = /(#{PADDING}+)/.match(code).to_a
         return false if pad_match.length != 2
         match = pad_match[1]
-        return false if match.length % 2 == 1 || match.length > SEPARATOR_POSITION - 2
+        return false if match.length.odd? || match.length > SEPARATOR_POSITION - 2
 
         # If the code is long enough to end with a separator, make sure it does.
         return false if code[code.length - 1] != SEPARATOR
@@ -87,8 +87,7 @@ module PlusCodes
     # @param code_length [Integer] the number of characters in the code, this excludes the separator
     # @return [String] a plus+codes
     def encode(latitude, longitude, code_length = PAIR_CODE_LENGTH)
-      if code_length < 2 ||
-          (code_length < SEPARATOR_POSITION && code_length % 2 == 1)
+      if code_length < 2 || (code_length < SEPARATOR_POSITION && code_length.odd?)
         raise ArgumentError, "Invalid Open Location Code length: #{code_length}"
       end
 
@@ -96,11 +95,12 @@ module PlusCodes
       longitude = normalize_longitude(longitude)
       if latitude == 90
         latitude = latitude - compute_latitude_precision(code_length).to_f
-        p latitude
       end
       code = encode_pairs(latitude, longitude, [code_length, PAIR_CODE_LENGTH].min)
       # If the requested length indicates we want grid refined codes.
-      code += encode_grid(latitude, longitude, code_length - PAIR_CODE_LENGTH) if code_length > PAIR_CODE_LENGTH
+      if code_length > PAIR_CODE_LENGTH
+        code += encode_grid(latitude, longitude, code_length - PAIR_CODE_LENGTH)
+      end
       code
     end
 
@@ -142,7 +142,7 @@ module PlusCodes
         if full?(short_code)
           return short_code
         else
-          raise ArgumentError, 'ValueError: Passed short code is not valid: ' + short_code
+          raise ArgumentError, "ValueError: Passed short code is not valid: #{short_code}"
         end
       end
 
