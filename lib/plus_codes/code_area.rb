@@ -15,8 +15,8 @@ module PlusCodes
   #
   # @author We-Ming Wu
   class CodeArea
-    attr_accessor :latitude_lo, :longitude_lo, :latitude_hi, :longitude_hi,
-      :code_length, :latitude_center, :longitude_center
+    attr_accessor :south_latitude, :west_longitude, :latitude_height, :longitude_width,
+      :latitude_center, :longitude_center
 
     # Creates a [CodeArea].
     #
@@ -26,18 +26,21 @@ module PlusCodes
     # @param longitude_hi [Numeric] the longitude of the NE corner in degrees
     # @param code_length [Integer] the number of characters in the code, this excludes the separator
     # @return [CodeArea] a code area which contains the coordinates
-    def initialize(latitude_lo, longitude_lo, latitude_hi, longitude_hi, code_length)
-      @latitude_lo = latitude_lo
-      @longitude_lo = longitude_lo
-      @latitude_hi = latitude_hi
-      @longitude_hi = longitude_hi
-      @code_length = code_length
-      @latitude_center = [@latitude_lo + (@latitude_hi - @latitude_lo) / 2, LATITUDE_MAX].min
-      @longitude_center = [@longitude_lo + (@longitude_hi - @longitude_lo) / 2, LONGITUDE_MAX].min
+    def initialize(south_latitude, west_longitude, latitude_height, longitude_width)
+      @south_latitude = south_latitude
+      @west_longitude = west_longitude
+      @latitude_height = latitude_height
+      @longitude_width = longitude_width
+      @latitude_center = south_latitude + latitude_height / 2.0
+      @longitude_center = west_longitude + longitude_width / 2.0
     end
-    
-    def to_s
-      "lat_lo: #{@latitude_lo} long_lo: #{@longitude_lo} lat_hi: #{@latitude_hi} long_hi: #{@longitude_hi} code_len: #{@code_length}"
+
+    def north_latitude
+      @south_latitude + @latitude_height
+    end
+
+    def east_longitude
+      @west_longitude + @longitude_width
     end
   end
 

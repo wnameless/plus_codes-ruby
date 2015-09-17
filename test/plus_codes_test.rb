@@ -27,12 +27,16 @@ class PlusCodesTest < Test::Unit::TestCase
     read_csv_lines('encodingTests.csv').each do |line|
       cols = line.split(',')
       code_area = @olc.decode(cols[0])
-      code = @olc.encode(cols[1].to_f, cols[2].to_f, code_area.code_length)
+      if cols[0].index('0')
+        code = @olc.encode(cols[1].to_f, cols[2].to_f, cols[0].index('0'))
+      else
+        code = @olc.encode(cols[1].to_f, cols[2].to_f, cols[0].length - 1)
+      end
       assert_equal(cols[0], code)
-      assert_true((code_area.latitude_lo - cols[3].to_f).abs < 0.001)
-      assert_true((code_area.longitude_lo - cols[4].to_f).abs < 0.001)
-      assert_true((code_area.latitude_hi - cols[5].to_f).abs < 0.001)
-      assert_true((code_area.longitude_hi - cols[6].to_f).abs < 0.001)
+      assert_true((code_area.south_latitude - cols[3].to_f).abs < 0.001)
+      assert_true((code_area.west_longitude - cols[4].to_f).abs < 0.001)
+      assert_true((code_area.north_latitude - cols[5].to_f).abs < 0.001)
+      assert_true((code_area.east_longitude - cols[6].to_f).abs < 0.001)
     end
   end
 
@@ -48,20 +52,11 @@ class PlusCodesTest < Test::Unit::TestCase
       expanded = @olc.recover_nearest(short, lat, lng)
       assert_equal(code, expanded)
     end
+    @olc.shorten('9C3W9QCJ+2VX', 60.3701125, 10.202665625)
   end
 
   def test_longer_encoding_with_speacial_case
-    assert_equal('CFX3X2X2+X2XXXXQ', @olc.encode(90.0, 1.0, 15));
-  end
-
-  def test_code_area_to_s
-    read_csv_lines('encodingTests.csv').each do |line|
-      cols = line.split(',')
-      code_area = @olc.decode(cols[0])
-      assert_equal("lat_lo: #{code_area.latitude_lo} long_lo: #{code_area.longitude_lo} " <<
-          "lat_hi: #{code_area.latitude_hi} long_hi: #{code_area.longitude_hi} " <<
-          "code_len: #{code_area.code_length}", code_area.to_s)
-    end
+    assert_equal('CFX3X2X2+X2RRRRJ', @olc.encode(90.0, 1.0, 15));
   end
 
   def test_exceptions
@@ -72,6 +67,15 @@ class PlusCodesTest < Test::Unit::TestCase
       @olc.recover_nearest('9C3W9QCJ-2VX', 51.3708675, -1.217765625)
     end
     @olc.recover_nearest('9C3W9QCJ+2VX', 51.3708675, -1.217765625)
+    assert_raise ArgumentError do
+      @olc.decode('sfdg')
+    end
+    assert_raise ArgumentError do
+      @olc.shorten('9C3W9Q+', 1, 2)
+    end
+    assert_raise ArgumentError do
+      @olc.shorten('9C3W9Q00+', 1, 2)
+    end
   end
 
   def test_valid?_with_speacial_case
