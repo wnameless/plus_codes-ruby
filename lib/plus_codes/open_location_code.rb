@@ -236,7 +236,7 @@ module PlusCodes
     def padded(code)
       code << PADDING * (SEPARATOR_POSITION - code.length) << SEPARATOR
     end
-
+    
     def precision_by_length(code_length)
       if code_length <= 10
         precision = 20 ** ((code_length / -2).to_i + 2)
