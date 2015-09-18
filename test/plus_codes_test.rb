@@ -78,7 +78,7 @@ class PlusCodesTest < Test::Unit::TestCase
     end
   end
 
-  def test_valid?_with_speacial_case
+  def test_valid_with_speacial_case
     assert_false(@olc.valid?('3W00CJJJ+'))
   end
 

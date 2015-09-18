@@ -105,7 +105,7 @@ module PlusCodes
 
     # Recovers a full Open Location Code(Plus+Codes) from a short code and a reference location.
     #
-    # @param code [String] a plus+codes
+    # @param short_code [String] a plus+codes
     # @param reference_latitude [Numeric] a reference latitude in degrees
     # @param reference_longitude [Numeric] a reference longitude in degrees
     # @return [String] a plus+codes
@@ -236,7 +236,7 @@ module PlusCodes
     def padded(code)
       code << PADDING * (SEPARATOR_POSITION - code.length) << SEPARATOR
     end
-    
+
     def precision_by_length(code_length)
       if code_length <= 10
         precision = 20 ** ((code_length / -2).to_i + 2)
