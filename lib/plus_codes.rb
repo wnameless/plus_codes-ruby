@@ -9,7 +9,7 @@ module PlusCodes
   # The max number of characters can be placed before the separator.
   SEPARATOR_POSITION = 8
 
-  # The character used to pad a code
+  # The character used to pad a code.
   PADDING = '0'.freeze
 
   # The character set used to encode coordinates.
